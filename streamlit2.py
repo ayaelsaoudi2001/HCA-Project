@@ -58,14 +58,17 @@ def show_AUD_page():
         st.markdown('---')  # Separator line
 
     elif plot_type == "Line Plot":
-        # Filter data for all years
-        data_all_years = filtered_data.groupby(['Entity', 'Year']).mean().reset_index()
+        pivot_data = filtered_data.pivot(index='Year', columns='Entity', values='Current number of cases of alcohol use disorders per 100 people, in both sexes aged age-standardized')
+
+        # Reset the index
+        pivot_data.reset_index(inplace=True)
 
         # Create line plot using Plotly Express
-        fig = px.line(data_all_years, x='Year', y='Current number of cases of alcohol use disorders per 100 people, in both sexes aged age-standardized', color='Entity',
+        fig = px.line(pivot_data, x='Year', y=pivot_data.columns[1:], 
+                    labels={'value': 'Death Rate per 100,000', 'Year': 'Year'},
                     color_discrete_map=color_map,  # Use custom color map
-                    labels={'Current number of cases of alcohol use disorders per 100 people, in both sexes aged age-standardized': 'Death Rate per 100,000'},
-                    title=f'Alcohol Use Disorder Rate Across the Years')
+                    title='Alcohol Use Disorder Rate Across the Years',
+                    )
 
         # Update layout
         fig.update_layout(xaxis_title='Year', yaxis_title='Rate per 100,000', title_font_size=20, legend_title_text='Country')
