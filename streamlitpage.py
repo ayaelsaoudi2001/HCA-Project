@@ -55,40 +55,26 @@ def show_liver_cancer_page():
         st.markdown('---')  # Separator line
 
     elif plot_type == "Line Plot":
-        # Filter data for all years
-        data_all_years = liver_cancer_across_countries.groupby(['Location', 'Year']).mean().reset_index()
-    
-        # Create a list to store Scatter objects for each country
-        scatter_traces = []
-    
-        # Iterate over each unique country/location
-        for location in data_all_years['Location'].unique():
-            # Filter data for the current country
-            country_data = data_all_years[data_all_years['Location'] == location]
-    
-            # Create a Scatter object for the current country
-            scatter_trace = go.Scatter(
-                x=country_data['Year'],
-                y=country_data['Value'],
-                mode='lines',  # Connect points with lines
-                name=location,  # Set the legend label to the country name
+         Create line plot using Plotly Express
+        fig = px.line(title='Liver Cancer Death Rate Across the Years')
+
+        # Iterate over each unique location
+        for location in liver_cancer_across_countries['Location'].unique():
+            # Filter data for the current location
+            location_data = liver_cancer_across_countries[liver_cancer_across_countries['Location'] == location]
+
+            # Add a line trace for the current location
+            fig.add_trace(go.Scatter(
+                x=location_data['Year'],
+                y=location_data['Value'],
+                mode='lines',
+                name=location,  # Set the legend label to the location name
                 line=dict(color=color_map.get(location))  # Use custom color from the color map
-            )
-    
-            # Append the Scatter object to the list
-            scatter_traces.append(scatter_trace)
-    
-        # Create the layout for the plot
-        layout = go.Layout(
-            title='Liver Cancer Death Rate Across the Years',
-            xaxis=dict(title='Year'),
-            yaxis=dict(title='Death Rate per 100,000'),
-            legend=dict(title='Country')
-        )
-    
-        # Create the Figure object
-        fig = go.Figure(data=scatter_traces, layout=layout)
-    
+            ))
+
+        # Update layout
+        fig.update_layout(xaxis_title='Year', yaxis_title='Death Rate per 100,000', title_font_size=20, legend_title_text='Country')
+
         # Render the Plotly figure
         st.plotly_chart(fig)
         st.markdown('---')  # Separator line
