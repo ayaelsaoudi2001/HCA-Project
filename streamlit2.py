@@ -219,5 +219,5 @@ def show_AUD_page():
 
         # Show the plot using Streamlit
         st.plotly_chart(fig)
-     st.markdown('---') 
+
 
