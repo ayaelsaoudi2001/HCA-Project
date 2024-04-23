@@ -54,7 +54,7 @@ def show_liver_cancer_page():
         st.plotly_chart(fig)
         st.markdown('---')  # Separator line
 
-        elif plot_type == "Line Plot":
+    elif plot_type == "Line Plot":
         # Filter data for all years
         data_all_years = liver_cancer_across_countries.groupby(['Location', 'Year']).mean().reset_index()
     
